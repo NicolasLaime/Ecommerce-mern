@@ -39,32 +39,37 @@ public class JwtFilter extends OncePerRequestFilter {
                 System.out.println(header + ": " + request.getHeader(header))
         );
 
+
         String token = extractToken(request);
         if (token != null && jwtUtils.validateToken(token)) {
             Claims claims = jwtUtils.getClaimsFromToken(token);
             String username = claims.getSubject();
 
-            // Extraer los roles del token directamente
+            // 🔥 Extraer los roles del token directamente
             List<GrantedAuthority> authorities = ((List<String>) claims.get("roles")).stream()
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
 
+            // 🛑 Imprimir roles antes de crear la autenticación
             System.out.println("Autoridades asignadas al usuario en Spring Security:");
             authorities.forEach(auth -> System.out.println(" - " + auth.getAuthority()));
 
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
             UsernamePasswordAuthenticationToken authToken =
-                    new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+                    new UsernamePasswordAuthenticationToken(userDetails, null, authorities); // ✅ Ahora incluye roles
 
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             SecurityContextHolder.getContext().setAuthentication(authToken);
 
-            System.out.println("Usuario autenticado en Spring Security: " + username);
-            System.out.println("Roles detectados en Spring Security:");
-            SecurityContextHolder.getContext().getAuthentication().getAuthorities()
-                    .forEach(auth -> System.out.println(" - " + auth.getAuthority()));
+            // 🛑 Verificar la autenticación después de asignarla
+            if (SecurityContextHolder.getContext().getAuthentication() != null) {
+                System.out.println("Usuario autenticado en Spring Security: " + username);
+                System.out.println("Roles detectados en Spring Security:");
+                SecurityContextHolder.getContext().getAuthentication().getAuthorities()
+                        .forEach(auth -> System.out.println(" - " + auth.getAuthority()));
+            }
         }
 
         filterChain.doFilter(request, response);
@@ -84,4 +89,6 @@ public class JwtFilter extends OncePerRequestFilter {
         // Excluir el filtro para todas las rutas de autenticación (registro, login, etc.)
         return path.startsWith("/api/auth/");
     }
+
+
 }
