@@ -14,7 +14,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(`${API_URL}/api/auth/login`, { email, password });
+      const { data } = await axios.post(`${API_URL}/api/auth/login`, { email, password },{withCredentials: true});
 
       // Almacenar token y roles en localStorage
       localStorage.setItem("token", data.token);

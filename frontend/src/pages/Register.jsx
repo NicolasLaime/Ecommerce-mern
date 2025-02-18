@@ -17,7 +17,7 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      await axios.post(`${API_URL}/api/auth/register`, { username, email, password });
+      await axios.post(`${API_URL}/api/auth/register`, { username, email, password },{withCredentials:true});
 
       toast.success("Usuario registrado con éxito 🎉");
 
