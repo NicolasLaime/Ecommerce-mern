@@ -34,6 +34,12 @@ public class JwtFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+        System.out.println("🔍 Headers de la petición:");
+        request.getHeaderNames().asIterator().forEachRemaining(header ->
+                System.out.println(header + ": " + request.getHeader(header))
+        );
+
+
         String token = extractToken(request);
         if (token != null && jwtUtils.validateToken(token)) {
             Claims claims = jwtUtils.getClaimsFromToken(token);
