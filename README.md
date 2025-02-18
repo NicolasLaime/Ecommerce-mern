@@ -29,7 +29,9 @@ Este proyecto es una aplicación de ecommerce que integra un **backend** desarro
 ### Backend
 - **Java** con **Spring Boot**
 - **Spring Security**
-- (Posible uso de **JPA/Hibernate** para la persistencia)
+- **JPA/Hibernate**
+- **Lombok**
+
 
 ### Frontend
 - **React**
