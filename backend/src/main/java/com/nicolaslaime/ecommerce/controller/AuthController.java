@@ -40,6 +40,10 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
+
+        System.out.println("🔹 Intentando registrar usuario: " + user.getEmail());
+
+
         // Validar si falta algún campo
         if (user.getEmail() == null || user.getPassword() == null || user.getUsername() == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Faltan datos obligatorios");
